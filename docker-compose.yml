@@ -1,0 +1,72 @@
+x-hardening: &hardening
+  read_only: true
+  tmpfs:
+    - /tmp
+  cap_drop:
+    - ALL
+  security_opt:
+    - no-new-privileges:true
+  restart: unless-stopped
+
+services:
+  app:
+    <<: *hardening
+    build: .
+    env_file: .env
+    environment:
+      DATABASE_URL: sqlite+aiosqlite:////srv/data/app.db
+      REDIS_URL: redis://redis:6379/0
+    volumes:
+      - appdata:/srv/data
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  worker:
+    <<: *hardening
+    build: .
+    command: ["arq", "app.jobs.worker.WorkerSettings"]
+    env_file: .env
+    environment:
+      REDIS_URL: redis://redis:6379/0
+    healthcheck:
+      disable: true
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  redis:
+    <<: *hardening
+    image: redis:7.4-alpine
+    # Sin RDB ni AOF: los resultados efímeros nunca se escriben en disco.
+    command: ["redis-server", "--save", "", "--appendonly", "no"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  caddy:
+    image: caddy:2.8-alpine
+    restart: unless-stopped
+    ports:
+      - "8443:8443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - app
+
+  # Solo desarrollo: `docker compose --profile dev up`. Bandeja en http://localhost:8025
+  mailpit:
+    image: axllent/mailpit:v1.21
+    profiles: ["dev"]
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8025:8025"
+
+volumes:
+  appdata:
+  caddy_data:
+  caddy_config:

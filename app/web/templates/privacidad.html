@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}Privacidad · Autoauditoría{% endblock %}
+{% block content %}
+<article class="prose">
+  <h1>Privacidad</h1>
+  <p class="lead">
+    Esta herramienta existe para que reduzcas tu exposición, no para sumar otra base de datos
+    sobre vos. Por eso procesamos lo mínimo y guardamos todavía menos.
+  </p>
+
+  <h2>Responsable del tratamiento</h2>
+  <p>Franco Insua. Contacto: <em>[completar email de contacto]</em>.</p>
+
+  <h2>Qué guardamos</h2>
+  <table>
+    <thead><tr><th>Dato</th><th>Para qué</th><th>Cuánto tiempo</th></tr></thead>
+    <tbody>
+      <tr><td>Tu email</td><td>Identificarte y verificar que es tuyo</td><td>Hasta que borres tu cuenta</td></tr>
+      <tr><td>Código y enlace de verificación (solo su hash)</td><td>Confirmar el email</td><td>15 minutos; un solo uso</td></tr>
+      <tr><td>Sesión (solo su hash)</td><td>Mantenerte conectado</td><td>60 minutos o hasta que cierres sesión</td></tr>
+      <tr><td>Contadores anti-abuso (hash de IP o cuenta)</td><td>Limitar solicitudes</td><td>Como máximo 1 hora</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Qué NO guardamos</h2>
+  <ul>
+    <li><strong>Resultados del análisis.</strong> Las filtraciones encontradas viven en memoria como máximo 10 minutos para que puedas armar el informe, y después se borran solas.</li>
+    <li><strong>El informe.</strong> Se genera, se muestra y se descarta. Si lo descargás, queda solo en tu dispositivo.</li>
+    <li><strong>Tus fotos.</strong> Se procesan en memoria y nunca se escriben en disco.</li>
+    <li><strong>Tus contraseñas.</strong> No llegan a nuestro servidor: tu navegador calcula el hash SHA-1 y le pide a Pwned Passwords la lista de hashes que empiezan con los mismos 5 caracteres. A nosotros solo nos llega cuántas veces apareció, para el informe.</li>
+    <li><strong>Registros de acceso.</strong> No registramos las peticiones ni los emails en los logs.</li>
+  </ul>
+
+  <h2>Con quién se comparte</h2>
+  <ul>
+    <li><strong>Have I Been Pwned</strong> (haveibeenpwned.com): recibe tu email verificado para buscarlo en filtraciones conocidas. Es un servicio externo con sus propios términos.</li>
+    <li><strong>Pwned Passwords</strong> (api.pwnedpasswords.com): recibe, desde tu navegador, solo los primeros 5 caracteres del hash de cada contraseña que compruebes.</li>
+    <li><strong>Proveedor de email</strong>: recibe tu dirección para enviarte el código de verificación.</li>
+  </ul>
+  <p>No vendemos datos, no usamos publicidad ni analítica de terceros.</p>
+
+  <h2>Base legal</h2>
+  <p>
+    Tratamos tu email porque lo pedís expresamente para usar el servicio (ejecución del servicio y
+    consentimiento). Podés retirar el consentimiento en cualquier momento borrando tu cuenta.
+  </p>
+
+  <h2>Tus derechos</h2>
+  <p>
+    Podés acceder, rectificar, oponerte, pedir la portabilidad o el borrado de tus datos. El borrado
+    es inmediato desde el botón «Borrar mi cuenta» de tu panel; para lo demás, escribinos al contacto
+    de arriba. También podés reclamar ante la autoridad de protección de datos de tu país.
+  </p>
+
+  <h2>Cookies</h2>
+  <p>
+    Usamos solo dos cookies técnicas imprescindibles: una de sesión y una de protección contra
+    falsificación de peticiones (CSRF). No hay cookies de seguimiento.
+  </p>
+
+  <h2>Seguridad</h2>
+  <p>
+    Todo el tráfico va cifrado por HTTPS. Los códigos, enlaces y sesiones se guardan solo como hash,
+    y cada endpoint tiene límites de uso para evitar abusos.
+  </p>
+</article>
+{% endblock %}

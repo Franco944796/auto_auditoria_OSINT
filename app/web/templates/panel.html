@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}Mi panel · Autoauditoría{% endblock %}
+{% block robots %}noindex, nofollow{% endblock %}
+{% block scripts %}<script type="module" src="/static/js/panel.js"></script>{% endblock %}
+{% block content %}
+<div class="panel-head no-print">
+  <div>
+    <p class="eyebrow">Sesión verificada</p>
+    <h1 id="user-email">…</h1>
+  </div>
+  <div class="panel-head__actions">
+    <button id="logout" type="button" class="button button--secondary">Cerrar sesión</button>
+    <button id="delete-account" type="button" class="button button--danger">Borrar mi cuenta</button>
+  </div>
+</div>
+
+<section class="card panel-section no-print" aria-labelledby="breach-title">
+  <div class="section-head">
+    <span class="step">1</span>
+    <div>
+      <h2 id="breach-title">Filtraciones de datos</h2>
+      <p class="muted">Buscamos tu email verificado en Have I Been Pwned. Puede tardar unos segundos.</p>
+    </div>
+  </div>
+  <button id="breach-start" type="button" class="button">Buscar mi email en filtraciones</button>
+  <p id="breach-status" class="notice" role="status" hidden></p>
+  <ul id="breach-results" class="result-list"></ul>
+</section>
+
+<section class="card panel-section no-print" aria-labelledby="password-title">
+  <div class="section-head">
+    <span class="step">2</span>
+    <div>
+      <h2 id="password-title">Contraseñas comprometidas</h2>
+      <p class="muted">
+        Tu navegador calcula el hash SHA-1 y consulta Pwned Passwords enviando solo los primeros
+        5 caracteres. Ni la contraseña ni su hash llegan a nuestro servidor.
+      </p>
+    </div>
+  </div>
+  <form id="password-form" class="inline-form" autocomplete="off">
+    <label class="visually-hidden" for="password">Contraseña a comprobar</label>
+    <input id="password" name="password" type="password" autocomplete="off" placeholder="Escribí una contraseña" required>
+    <button type="submit" class="button">Comprobar</button>
+  </form>
+  <p id="password-status" class="notice" role="status" hidden></p>
+  <ul id="password-results" class="result-list"></ul>
+</section>
+
+<section class="card panel-section no-print" aria-labelledby="photo-title">
+  <div class="section-head">
+    <span class="step">3</span>
+    <div>
+      <h2 id="photo-title">Metadatos de tus fotos</h2>
+      <p class="muted">JPEG, PNG o WebP de hasta 15 MB. Se procesan en memoria y no se guardan.</p>
+    </div>
+  </div>
+  <label class="dropzone" for="photo-input">
+    <span>Elegí una o varias fotos</span>
+    <input id="photo-input" type="file" accept="image/jpeg,image/png,image/webp" multiple>
+  </label>
+  <p id="photo-status" class="notice" role="status" hidden></p>
+  <div id="photo-results" class="photo-grid"></div>
+</section>
+
+<section id="report-section" class="card panel-section" aria-labelledby="report-title">
+  <div class="section-head no-print">
+    <span class="step">4</span>
+    <div>
+      <h2 id="report-title">Tu informe</h2>
+      <p class="muted">Junta lo que analizaste, con el nivel de riesgo y los pasos a seguir. No se guarda.</p>
+    </div>
+  </div>
+  <div class="actions no-print">
+    <button id="report-generate" type="button" class="button">Generar informe</button>
+    <button id="report-download" type="button" class="button button--secondary" hidden>Descargar HTML</button>
+    <button id="report-print" type="button" class="button button--secondary" hidden>Imprimir o guardar PDF</button>
+  </div>
+  <p id="report-status" class="notice no-print" role="status" hidden></p>
+  <div id="report" class="report"></div>
+</section>
+{% endblock %}

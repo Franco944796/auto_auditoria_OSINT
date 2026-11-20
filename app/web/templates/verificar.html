@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Confirmar email · Autoauditoría{% endblock %}
+{% block robots %}noindex, nofollow{% endblock %}
+{% block scripts %}<script type="module" src="/static/js/verificar.js"></script>{% endblock %}
+{% block content %}
+<section class="card auth-card" aria-labelledby="verify-title">
+  <h1 id="verify-title">Confirmá tu email</h1>
+  <div id="with-token" hidden>
+    <p>Tocá el botón para confirmar que este email es tuyo y entrar a tu panel.</p>
+    <button id="confirm" type="button" class="button">Confirmar mi email</button>
+  </div>
+  <div id="without-token" hidden>
+    <p>Este enlace no es válido o ya se usó. Podés ingresar el código del email o pedir uno nuevo.</p>
+    <a class="button button--secondary" href="/">Volver al inicio</a>
+  </div>
+  <p id="message" class="notice" role="status" hidden></p>
+</section>
+{% endblock %}

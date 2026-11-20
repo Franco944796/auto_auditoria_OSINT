@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <meta name="robots" content="{% block robots %}index, follow{% endblock %}">
+  <title>{% block title %}Autoauditoría de exposición digital{% endblock %}</title>
+  <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/static/css/app.css">
+  {% block scripts %}{% endblock %}
+</head>
+<body>
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a class="brand" href="/">
+        <span class="brand__mark" aria-hidden="true"></span>
+        Autoauditoría
+      </a>
+      <nav aria-label="Principal"><a href="/privacidad">Privacidad</a></nav>
+    </div>
+  </header>
+  <main class="container">
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="site-footer">
+    <p>© 2026 Franco Insua. Todos los derechos reservados.</p>
+    <p><a href="/privacidad">Qué datos procesamos y qué no guardamos</a></p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,11 @@
+{
+	# Desarrollo: certificado de una CA local de Caddy. En producción borrar esta línea y
+	# usar el dominio real abajo; Caddy obtiene y renueva el certificado solo.
+	local_certs
+}
+
+https://localhost:8443 {
+	encode zstd gzip
+	reverse_proxy app:8000
+	header -Server
+}
