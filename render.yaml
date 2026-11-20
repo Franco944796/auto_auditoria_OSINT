@@ -1,0 +1,48 @@
+# Despliegue gratuito en Render (Blueprint). Los secretos se cargan en el panel de Render:
+# las variables con `sync: false` se piden al crear el Blueprint y nunca van en este archivo.
+services:
+  - type: web
+    name: auto-auditoria-osint
+    runtime: docker
+    plan: free
+    region: virginia
+    healthCheckPath: /healthz
+    autoDeployTrigger: commit
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+      - key: SECRET_KEY
+        generateValue: true
+      - key: PUBLIC_BASE_URL
+        sync: false
+      # El plan gratis no tiene workers: las consultas corren dentro de la app.
+      - key: JOB_BACKEND
+        value: inprocess
+      - key: REDIS_URL
+        fromService:
+          type: keyvalue
+          name: auto-auditoria-kv
+          property: connectionString
+      # El plan gratis tiene disco efímero: la base se reinicia al dormirse o redesplegar.
+      - key: DATABASE_URL
+        value: sqlite+aiosqlite:////srv/data/app.db
+      # El plan gratis bloquea los puertos SMTP: los emails salen por la API HTTPS de Brevo.
+      - key: MAIL_BACKEND
+        value: brevo
+      - key: BREVO_API_KEY
+        sync: false
+      - key: MAIL_FROM
+        sync: false
+      - key: BREACH_SOURCE
+        value: auto
+      - key: HIBP_API_KEY
+        sync: false
+
+  - type: keyvalue
+    name: auto-auditoria-kv
+    plan: free
+    region: virginia
+    # Lista vacía: sin conexiones externas, solo la red privada de Render.
+    ipAllowList: []
+    # Todas las claves de la app tienen vencimiento: se desalojan primero las más viejas.
+    maxmemoryPolicy: volatile-lru

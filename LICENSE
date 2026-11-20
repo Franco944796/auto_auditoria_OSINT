@@ -1,28 +1,42 @@
 Copyright (c) 2026 Franco Insua. Todos los derechos reservados.
 
-LICENCIA PROPIETARIA
+LICENSE (FUENTE VISIBLE, TODOS LOS DERECHOS RESERVADOS)
 
-Este software, su código fuente, su código objeto, su diseño, su documentación y todos los
-materiales asociados (en conjunto, «el Software») son propiedad exclusiva del titular indicado
-arriba y están protegidos por las leyes de propiedad intelectual y los tratados internacionales
-aplicables.
+El código fuente de este repositorio se publica únicamente para que pueda leerse y evaluarse
+(por ejemplo, como muestra de trabajo). Publicarlo no lo convierte en software libre ni de código
+abierto: el software, su código fuente y objeto, su diseño, sus textos y su documentación
+(en conjunto, «el Software») siguen siendo propiedad exclusiva del titular indicado arriba.
 
-No se concede ninguna licencia ni derecho sobre el Software, de forma expresa ni implícita,
-salvo acuerdo escrito y firmado por el titular. En particular, sin ese acuerdo queda prohibido:
+1. Lo que SÍ está permitido
 
-  1. Copiar, reproducir, modificar, adaptar, traducir o crear obras derivadas del Software,
-     en todo o en parte.
-  2. Distribuir, sublicenciar, vender, alquilar, prestar, publicar o poner el Software a
-     disposición de terceros, incluido su uso para prestar servicios a terceros.
-  3. Descompilar, desensamblar o aplicar ingeniería inversa al Software, salvo en la medida
-     en que la ley aplicable lo permita expresamente pese a esta limitación.
-  4. Eliminar o alterar avisos de derechos de autor, marcas o esta licencia.
+   a) Ver y leer el código en GitHub, y bifurcarlo (fork) dentro de GitHub, en la medida en que
+      los Términos de Servicio de GitHub lo otorgan a sus usuarios para repositorios públicos.
+   b) Estudiar el código con fines personales, educativos y no comerciales.
+   c) Citar fragmentos breves con fines de análisis, crítica o enseñanza, indicando la autoría y
+      un enlace a este repositorio.
+   d) Reportar errores o vulnerabilidades al titular.
 
-El acceso al código fuente, cuando exista, se otorga solo a las personas autorizadas por el
-titular y con el único fin de colaborar en su desarrollo, bajo deber de confidencialidad.
+2. Lo que NO está permitido sin autorización previa y por escrito del titular
 
-EL SOFTWARE SE ENTREGA «TAL CUAL», SIN GARANTÍAS DE NINGÚN TIPO, EXPRESAS O IMPLÍCITAS. EN
-NINGÚN CASO EL TITULAR SERÁ RESPONSABLE POR DAÑOS DERIVADOS DEL USO O LA IMPOSIBILIDAD DE USO
-DEL SOFTWARE, EN LA MEDIDA PERMITIDA POR LA LEY.
+   a) Ejecutar, desplegar u hospedar el Software, o cualquier parte de él, para ofrecerlo a
+      terceros, sea gratis o pago, incluido como servicio en línea (SaaS).
+   b) Usar el Software, o partes de él, con fines comerciales.
+   c) Copiar, reproducir o redistribuir el Software fuera de lo permitido en el punto 1.
+   d) Modificarlo, adaptarlo o crear obras derivadas para usarlas o distribuirlas.
+   e) Sublicenciar, vender, alquilar o transferir el Software.
+   f) Eliminar o alterar avisos de derechos de autor, marcas o esta licencia.
 
-Consultas sobre licencias: [completar email de contacto].
+3. Componentes de terceros
+
+   Las bibliotecas y servicios de terceros que usa el Software conservan sus propias licencias y
+   términos de uso. Esta licencia no los modifica ni otorga derechos sobre ellos.
+
+4. Garantía y responsabilidad
+
+   EL SOFTWARE SE ENTREGA «TAL CUAL», SIN GARANTÍAS DE NINGÚN TIPO, EXPRESAS O IMPLÍCITAS. EN
+   NINGÚN CASO EL TITULAR SERÁ RESPONSABLE POR DAÑOS DERIVADOS DEL USO O DE LA IMPOSIBILIDAD DE
+   USO DEL SOFTWARE, EN LA MEDIDA EN QUE LA LEY APLICABLE LO PERMITA.
+
+5. Licencias comerciales y permisos
+
+   Para obtener una licencia comercial o un permiso distinto: sudoanonimo@gmail.com

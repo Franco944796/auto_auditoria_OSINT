@@ -49,9 +49,10 @@ async function startBreachAnalysis(event) {
   button.disabled = true;
   clear($("breach-results"));
   state.breachJobId = null;
-  showMessage(status, "Consultando Have I Been Pwned…", "info");
+  showMessage(status, `Consultando ${button.dataset.label}…`, "info");
   try {
-    const { job_id: jobId } = await (await api("/api/analysis/hibp", { method: "POST" })).json();
+    const source = encodeURIComponent(button.dataset.source);
+    const { job_id: jobId } = await (await api(`/api/analysis/${source}`, { method: "POST" })).json();
     const job = await pollJob(jobId);
     if (job.status === "failed") throw new Error(job.error);
     state.breachJobId = jobId;

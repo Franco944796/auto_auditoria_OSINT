@@ -5,8 +5,9 @@ from typing import Any, ClassVar
 import httpx
 from arq import func
 from arq.connections import RedisSettings
+from redis.asyncio import Redis
 
-from app.config import get_settings
+from app.config import Settings, get_settings
 from app.identity.types import VerifiedIdentity
 from app.jobs.store import ResultStore
 from app.sources.base import SourceError
@@ -37,11 +38,18 @@ async def run_source_job(
         await store.complete(job_id, findings)
 
 
+def build_job_context(settings: Settings, redis: Redis) -> dict[str, Any]:
+    http = httpx.AsyncClient()
+    return {
+        "redis": redis,
+        "http": http,
+        "store": ResultStore(redis, settings.result_ttl_seconds),
+        "sources": build_background_sources(settings, http_client=http, redis=redis),
+    }
+
+
 async def startup(ctx: dict[str, Any]) -> None:
-    settings = get_settings()
-    ctx["http"] = httpx.AsyncClient()
-    ctx["store"] = ResultStore(ctx["redis"], settings.result_ttl_seconds)
-    ctx["sources"] = build_background_sources(settings, http_client=ctx["http"], redis=ctx["redis"])
+    ctx.update(build_job_context(get_settings(), ctx["redis"]))
 
 
 async def shutdown(ctx: dict[str, Any]) -> None:

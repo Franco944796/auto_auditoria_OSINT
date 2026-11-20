@@ -47,7 +47,7 @@ def _plural(count: int, singular: str, plural: str) -> str:
 
 def _summary_breaches(findings: list[Finding]) -> str:
     if not findings:
-        return "Tu email no aparece en ninguna filtración conocida por Have I Been Pwned."
+        return "Tu email no aparece en ninguna filtración conocida."
     return f"Tu email aparece en {_plural(len(findings), 'filtración', 'filtraciones')}."
 
 

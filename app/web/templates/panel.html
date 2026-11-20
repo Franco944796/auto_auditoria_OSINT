@@ -19,12 +19,13 @@
     <span class="step">1</span>
     <div>
       <h2 id="breach-title">Filtraciones de datos</h2>
-      <p class="muted">Buscamos tu email verificado en Have I Been Pwned. Puede tardar unos segundos.</p>
+      <p class="muted">Buscamos tu email verificado en {{ breach.label }}. Puede tardar unos segundos.</p>
     </div>
   </div>
-  <button id="breach-start" type="button" class="button">Buscar mi email en filtraciones</button>
+  <button id="breach-start" type="button" class="button" data-source="{{ breach.source }}" data-label="{{ breach.label }}">Buscar mi email en filtraciones</button>
   <p id="breach-status" class="notice" role="status" hidden></p>
   <ul id="breach-results" class="result-list"></ul>
+  <p class="attribution">Datos de filtraciones: <a href="{{ breach.url }}" target="_blank" rel="noopener noreferrer">{{ breach.label }}</a></p>
 </section>
 
 <section class="card panel-section no-print" aria-labelledby="password-title">

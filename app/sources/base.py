@@ -33,6 +33,8 @@ class SourceError(Exception):
 
 class Source[P](ABC):
     name: ClassVar[str]
+    display_name: ClassVar[str] = ""
+    homepage: ClassVar[str] = ""
     category: ClassVar[Category]
     runs_in_background: ClassVar[bool] = False
 

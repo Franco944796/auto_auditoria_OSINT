@@ -10,7 +10,7 @@ from app.jobs.store import JobStatus, ResultStore
 from app.schemas import StrictModel
 from app.security.ratelimit import Limit
 from app.sources.base import Finding
-from app.sources.registry import BACKGROUND_SOURCES
+from app.sources.registry import enabled_background_sources
 
 router = APIRouter(prefix="/api/analysis", tags=["recolección"])
 
@@ -48,9 +48,10 @@ async def start_analysis(
     ],
     store: StoreDep,
     queue: Annotated[JobQueue, Depends(get_queue)],
+    settings: SettingsDep,
 ) -> JobStarted:
     """No acepta cuerpo: el sujeto es siempre el email de la sesión verificada."""
-    if source_name not in BACKGROUND_SOURCES:
+    if source_name not in enabled_background_sources(settings):
         raise HTTPException(status.HTTP_404_NOT_FOUND, "Fuente desconocida.")
     job_id = secrets.token_urlsafe(16)
     await store.create(job_id, identity.user_id, source_name)

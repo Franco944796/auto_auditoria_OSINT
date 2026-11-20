@@ -418,6 +418,12 @@ details summary {
   margin-top: 0.3rem;
 }
 
+.attribution {
+  margin: 0.75rem 0 0;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
 .dropzone {
   display: flex;
   flex-direction: column;

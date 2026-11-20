@@ -24,9 +24,10 @@ RUN pip install . \
     && mkdir -p /srv/data \
     && chown appuser:appuser /srv/data
 USER appuser
+# Render y otros PaaS indican el puerto en PORT; en docker-compose queda el 8000.
+ENV PORT=8000
 EXPOSE 8000
 HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
-    CMD ["python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/healthz')"]
-# --proxy-headers: la IP real y el esquema https llegan desde Caddy (X-Forwarded-*).
-CMD ["uvicorn", "app.main:create_app", "--factory", "--host", "0.0.0.0", "--port", "8000", \
-     "--proxy-headers", "--forwarded-allow-ips", "*", "--no-access-log"]
+    CMD ["python", "-c", "import os, urllib.request; urllib.request.urlopen(f\"http://127.0.0.1:{os.environ['PORT']}/healthz\")"]
+# --proxy-headers: la IP real y el esquema https llegan del proxy (Caddy o Render).
+CMD ["sh", "-c", "exec uvicorn app.main:create_app --factory --host 0.0.0.0 --port \"$PORT\" --proxy-headers --forwarded-allow-ips '*' --no-access-log"]

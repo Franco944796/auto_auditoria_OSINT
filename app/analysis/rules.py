@@ -90,6 +90,12 @@ def breach_exposed(finding: Finding) -> Assessment:
             "Usá un gestor de contraseñas para tener una distinta en cada sitio.",
             f"Activá la verificación en dos pasos (2FA) en {site} y, sobre todo, en tu email.",
         ]
+    if finding.data.get("password_risk") in ("plaintext", "easytocrack"):
+        steps.insert(
+            0,
+            f"La contraseña de {site} se filtró sin cifrar o con un cifrado débil: "
+            "cambiala ya en todos los sitios donde la uses.",
+        )
     if classes & SECURITY_QUESTION_CLASSES:
         steps.append(
             "Cambiá tus preguntas de seguridad: usá respuestas inventadas y guardalas en el gestor."

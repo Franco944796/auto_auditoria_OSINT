@@ -1,8 +1,6 @@
 import asyncio
-import html
 import logging
 import random
-import re
 from collections.abc import Awaitable, Callable
 from typing import Any
 from urllib.parse import quote
@@ -11,51 +9,20 @@ import httpx
 
 from app.identity.types import VerifiedIdentity
 from app.sources.base import Category, Finding, Source, SourceError
+from app.sources.breach_data import data_classes_es, plain_text
 from app.sources.pacing import Pacer
 
 logger = logging.getLogger(__name__)
 
 HIBP_API = "https://haveibeenpwned.com/api/v3"
-_TAG = re.compile(r"<[^>]+>")
-
-DATA_CLASS_ES = {
-    "Email addresses": "emails",
-    "Passwords": "contraseñas",
-    "Password hints": "pistas de contraseña",
-    "Usernames": "nombres de usuario",
-    "Names": "nombres",
-    "Phone numbers": "teléfonos",
-    "Physical addresses": "direcciones",
-    "Dates of birth": "fechas de nacimiento",
-    "Geographic locations": "ubicaciones",
-    "IP addresses": "direcciones IP",
-    "Genders": "género",
-    "Credit cards": "tarjetas de crédito",
-    "Partial credit card data": "datos parciales de tarjetas",
-    "Bank account numbers": "cuentas bancarias",
-    "Security questions and answers": "preguntas de seguridad",
-    "Government issued IDs": "documentos de identidad",
-    "Social security numbers": "números de seguridad social",
-    "Passport numbers": "pasaportes",
-    "Auth tokens": "tokens de sesión",
-    "Job titles": "puestos de trabajo",
-    "Employers": "empleadores",
-    "Social media profiles": "perfiles de redes sociales",
-}
-
-
-def data_classes_es(classes: list[str]) -> list[str]:
-    return [DATA_CLASS_ES.get(name, name) for name in classes]
-
-
-def _plain_text(markup: str) -> str:
-    return html.unescape(_TAG.sub("", markup)).strip()
 
 
 class HibpSource(Source[None]):
     """Brechas del email verificado vía la API oficial v3 (requiere API key, sin scraping)."""
 
     name = "hibp"
+    display_name = "Have I Been Pwned"
+    homepage = "https://haveibeenpwned.com"
     category = Category.BREACHES
     runs_in_background = True
 
@@ -133,7 +100,7 @@ class HibpSource(Source[None]):
             category=self.category,
             code="breach.exposed",
             title=breach.get("Title") or breach.get("Name", "Filtración"),
-            detail=_plain_text(breach.get("Description", ""))[:5000],
+            detail=plain_text(breach.get("Description", ""))[:5000],
             data={
                 "name": breach.get("Name"),
                 "domain": breach.get("Domain") or None,

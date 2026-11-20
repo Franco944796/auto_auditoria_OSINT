@@ -13,7 +13,8 @@ from app.config import Settings, get_settings
 from app.db import init_db, make_engine, make_sessionmaker
 from app.identity.mailer import Mailer, build_mailer
 from app.identity.routes import router as identity_router
-from app.jobs.queue import ArqJobQueue, JobQueue
+from app.jobs.queue import ArqJobQueue, InProcessJobQueue, JobQueue
+from app.jobs.worker import build_job_context
 from app.security.middleware import install_security_middleware, rate_limited_response
 from app.security.ratelimit import RateLimitExceeded
 from app.web.pages import STATIC_DIR
@@ -36,7 +37,12 @@ def create_app(
         app.state.sessionmaker = make_sessionmaker(engine)
         app.state.redis = redis or Redis.from_url(settings.redis_url)
         app.state.mailer = mailer or build_mailer(settings)
-        app.state.job_queue = job_queue or await ArqJobQueue.connect(settings.redis_url)
+        if job_queue is not None:
+            app.state.job_queue = job_queue
+        elif settings.job_backend == "inprocess":
+            app.state.job_queue = InProcessJobQueue(build_job_context(settings, app.state.redis))
+        else:
+            app.state.job_queue = await ArqJobQueue.connect(settings.redis_url)
         try:
             yield
         finally:

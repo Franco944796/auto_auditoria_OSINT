@@ -20,7 +20,12 @@ class Settings(BaseSettings):
     verification_ttl_minutes: int = 15
     verification_max_attempts: int = 5
 
-    mail_backend: Literal["smtp", "console"] = "smtp"
+    # arq: worker aparte (docker-compose). inprocess: tareas asyncio en la propia app, para
+    # hostings gratuitos de un solo servicio (Render free no ofrece workers).
+    job_backend: Literal["arq", "inprocess"] = "arq"
+
+    mail_backend: Literal["smtp", "console", "brevo"] = "smtp"
+    brevo_api_key: SecretStr = SecretStr("")
     smtp_host: str = "localhost"
     smtp_port: int = 1025
     smtp_username: str = ""
@@ -29,6 +34,8 @@ class Settings(BaseSettings):
     smtp_use_tls: bool = False
     mail_from: str = "Autoauditoría <no-reply@localhost>"
 
+    # auto: HIBP si hay API key; si no, XposedOrNot (gratis, solo uso personal y bajo volumen).
+    breach_source: Literal["auto", "hibp", "xposedornot"] = "auto"
     hibp_api_key: SecretStr = SecretStr("")
     hibp_user_agent: str = "herramienta-osint-autoauditoria"
     hibp_requests_per_minute: int = Field(default=10, ge=1)

@@ -3,7 +3,8 @@
 Aplicación web para que una persona revise qué información **sobre ella misma** está expuesta en
 internet y reciba un plan concreto para reducirla:
 
-- **Filtraciones de datos** de su email verificado (Have I Been Pwned v3).
+- **Filtraciones de datos** de su email verificado: Have I Been Pwned v3 si hay API key, o
+  XposedOrNot (gratis) si no.
 - **Contraseñas comprometidas** con k-anonimidad (Pwned Passwords), calculadas en el navegador.
 - **Metadatos de sus fotos** (GPS, dispositivo, fechas, números de serie) y descarga de una copia limpia.
 - **Informe** con riesgo bajo / medio / alto por categoría y pasos de remediación.
@@ -11,7 +12,8 @@ internet y reciba un plan concreto para reducirla:
 > Principio no negociable: solo datos propios y verificados. No existe búsqueda libre por nombre,
 > usuario, teléfono ni email de otra persona. Toda fuente recibe el sujeto desde la sesión verificada.
 
-Software propietario: ver [LICENSE](LICENSE).
+El código es visible pero no libre: se puede leer y estudiar, no usar, desplegar ni copiar sin
+permiso. Ver [LICENSE](LICENSE).
 
 ## Requisitos
 
@@ -32,7 +34,14 @@ python -c "import secrets; print(secrets.token_urlsafe(48))"   # pegar en SECRET
 3. Ajustar `HIBP_REQUESTS_PER_MINUTE` al límite del plan contratado: los workers se reparten ese
    cupo entre todos a través de Redis.
 
-Sin API key la app funciona, pero el análisis de filtraciones responde que no está configurado.
+Sin API key, `BREACH_SOURCE=auto` usa **XposedOrNot**:
+- No pide clave y permite 25 consultas por hora y 100 por día por IP. La app controla ese cupo
+  antes de llamar.
+- Sus términos limitan el plan gratis a uso personal y de bajo volumen, piden citarlos y exigen
+  licencia para uso comercial.
+- Sirve para la demo. Para vender el servicio hace falta HIBP pago o el plan pago de
+  XposedOrNot (xonAPI+).
+
 Pwned Passwords no necesita clave.
 
 Variables principales (todas en [.env.example](.env.example)):
@@ -74,6 +83,30 @@ export MAIL_BACKEND=console FORCE_HTTPS=false COOKIE_SECURE=false \
 Abrir <http://localhost:8000> (no `127.0.0.1` con otro puerto: el chequeo de contraseñas usa
 `crypto.subtle`, que exige HTTPS o `localhost`). El código de verificación aparece en el log.
 
+## Despliegue gratuito en Render
+
+[render.yaml](render.yaml) define un servicio web gratis (Docker) y un Key Value gratis (Redis,
+sin persistencia). No contiene secretos.
+
+1. En Render: **New › Blueprint**, elegir este repo.
+2. Completar las variables que pide:
+   - `PUBLIC_BASE_URL`: `https://<nombre-del-servicio>.onrender.com`.
+   - `BREVO_API_KEY`: la clave de Brevo.
+   - `MAIL_FROM`: un remitente verificado en Brevo, por ejemplo `Autoauditoría <tu@email>`.
+   - `HIBP_API_KEY`: vacía para usar XposedOrNot.
+3. Si después cambia la URL, actualizar `PUBLIC_BASE_URL` en el panel.
+
+Limitaciones del plan gratis:
+- El servicio se duerme a los 15 minutos sin visitas y tarda cerca de un minuto en despertar.
+- El disco es efímero: la base de usuarios se reinicia al dormirse o redesplegar, así que hay
+  que volver a verificar el email.
+- No hay workers: `JOB_BACKEND=inprocess` corre las consultas dentro de la app.
+- Los puertos SMTP están bloqueados: los emails salen por la API de Brevo
+  (`MAIL_BACKEND=brevo`).
+
+Con un remitente `@gmail.com` los mails pueden caer en spam. Para producción conviene un dominio
+propio con SPF y DKIM configurados en Brevo.
+
 ## Tests y lint
 
 ```bash
@@ -97,7 +130,7 @@ verificación de identidad  →  recolección  →  análisis de riesgo  →  in
 |---|---|
 | `app/identity/` | OTP + magic link, sesiones, envío de email. Único lugar que crea un `VerifiedIdentity`. |
 | `app/sources/` | Una fuente por archivo con la interfaz común `Source.collect(identity, payload)`. Solo observan hechos (`Finding`). |
-| `app/jobs/` | Cola arq para fuentes lentas; resultados en Redis con vencimiento (`ResultStore`). |
+| `app/jobs/` | Fuentes lentas en segundo plano: arq (worker aparte) o tareas dentro de la app (`JOB_BACKEND=inprocess`). Resultados en Redis con vencimiento (`ResultStore`). |
 | `app/analysis/` | Reglas por código de hallazgo: severidad + pasos de remediación. Nivel por categoría y global. |
 | `app/report/` | Arma el informe en memoria. No hay tabla de informes. |
 | `app/security/` | Cabeceras (CSP, HSTS…), CSRF, rate limiting en Redis, redirección a HTTPS. |
@@ -110,8 +143,9 @@ verificación de identidad  →  recolección  →  análisis de riesgo  →  in
    vencen a los 15 minutos, sirven una vez y se guardan como HMAC. El token va en el fragmento
    `#`, así no llega al servidor ni a los logs, y la página pide confirmar con un botón: los
    escáneres de correo abren enlaces pero no los consumen.
-2. Con la sesión verificada, `POST /api/analysis/hibp` encola el trabajo; el navegador consulta
-   `GET /api/analysis/jobs/{id}` hasta que termina.
+2. Con la sesión verificada, `POST /api/analysis/{fuente}` encola el trabajo y el navegador
+   consulta `GET /api/analysis/jobs/{id}` hasta que termina. La fuente es `hibp` o `xposedornot`,
+   según `BREACH_SOURCE`.
 3. Las contraseñas se comprueban desde el navegador directo contra `api.pwnedpasswords.com`, con
    la cabecera `Add-Padding`. Al backend solo llega cuántas veces apareció cada una.
 4. Las fotos se envían como cuerpo crudo y se procesan en memoria. No se usa `UploadFile`,
@@ -155,7 +189,6 @@ Previstas fuera del MVP:
 
 - Dominio real en el `Caddyfile` (quitar `local_certs`) y en `PUBLIC_BASE_URL`.
 - SMTP transaccional con SPF, DKIM y DMARC; sin el perfil `dev`.
-- Completar el contacto en la página de privacidad y en `LICENSE`.
 - Migraciones con Alembic si cambia el esquema. Hoy las tablas se crean al arrancar.
 - Pasar a PostgreSQL si se usan varias réplicas de la app.
 - Monitoreo de errores sin datos personales y copias de seguridad del volumen `appdata`.

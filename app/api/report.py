@@ -42,6 +42,7 @@ async def create_report(
     store: StoreDep,
 ) -> Report:
     findings: dict[Category, list[Finding] | None] = {}
+    sources_used: list[str] = []
     if body.breach_job_id is not None:
         job = await store.get(body.breach_job_id, identity.user_id)
         if job is None:
@@ -54,10 +55,13 @@ async def create_report(
         if job.status is JobStatus.FAILED:
             raise HTTPException(status.HTTP_409_CONFLICT, job.error or "El análisis falló.")
         findings[Category.BREACHES] = job.findings
+        sources_used.append(job.source)
     if body.password_checks:
         findings[Category.PASSWORDS] = await passwords_source.collect(
             identity, body.password_checks
         )
+    if body.password_checks:
+        sources_used.append(passwords_source.name)
     if body.photo_findings:
         findings[Category.PHOTOS] = body.photo_findings
-    return build_report(identity, assess(findings))
+    return build_report(identity, assess(findings), sources_used)
