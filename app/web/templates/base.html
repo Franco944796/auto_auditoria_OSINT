@@ -5,27 +5,29 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="referrer" content="no-referrer">
   <meta name="robots" content="{% block robots %}index, follow{% endblock %}">
+  <meta name="description" content="Revisá qué información tuya está expuesta en internet y recibí un plan para reducirla.">
   <title>{% block title %}Autoauditoría de exposición digital{% endblock %}</title>
   <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="/static/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/static/css/app.css">
   {% block scripts %}{% endblock %}
 </head>
 <body>
   <header class="site-header">
-    <div class="site-header__inner">
-      <a class="brand" href="/">
-        <span class="brand__mark" aria-hidden="true"></span>
-        Autoauditoría
-      </a>
+    <div class="wrap site-header__inner">
+      <a class="brand" href="/"><span class="brand__mark" aria-hidden="true"></span>Autoauditoría</a>
       <nav aria-label="Principal"><a href="/privacidad">Privacidad</a></nav>
     </div>
   </header>
-  <main class="container">
+  <main class="wrap main">
     {% block content %}{% endblock %}
   </main>
   <footer class="site-footer">
-    <p>© 2026 Franco Insua. Todos los derechos reservados.</p>
-    <p><a href="/privacidad">Qué datos procesamos y qué no guardamos</a></p>
+    <div class="wrap site-footer__inner">
+      <span>© 2026 Franco Insua</span>
+      <a href="/privacidad">Privacidad</a>
+      <a href="https://github.com/Franco944796/auto_auditoria_OSINT" target="_blank" rel="noopener noreferrer">Código</a>
+    </div>
   </footer>
 </body>
 </html>

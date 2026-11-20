@@ -69,16 +69,17 @@ function escapeHtml(value) {
 }
 
 const REPORT_CSS = `
-body{font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:#1b1f24;max-width:820px;margin:2rem auto;padding:0 1rem}
-h1{font-size:1.6rem;margin:0}h2{font-size:1.25rem;margin:2rem 0 .25rem}h3{font-size:1rem;margin:0}
-.muted{color:#57606a}.head{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;border-bottom:2px solid #d0d7de;padding-bottom:1rem}
-.badge{display:inline-block;padding:.2rem .7rem;border-radius:999px;font-weight:600;font-size:.85rem;white-space:nowrap}
-.low,.info{background:#dafbe1;color:#116329}.medium{background:#fff1c2;color:#7a4d00}.high{background:#ffe0de;color:#a40e26}.none{background:#eaeef2;color:#57606a}
-.finding{border:1px solid #d0d7de;border-left-width:5px;border-radius:8px;padding:.8rem 1rem;margin:.8rem 0;break-inside:avoid}
-.finding.high{border-left-color:#cf222e;background:none;color:inherit}.finding.medium{border-left-color:#bf8700;background:none;color:inherit}
-.finding.low,.finding.info{border-left-color:#1a7f37;background:none;color:inherit}
-.fhead{display:flex;justify-content:space-between;gap:1rem;align-items:center}
-footer{margin-top:2rem;font-size:.85rem;color:#57606a;border-top:1px solid #d0d7de}
+body{font:15px/1.6 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:#0a0a0a;background:#fff;max-width:760px;margin:48px auto;padding:0 20px}
+h1{font-size:1.75rem;letter-spacing:-.03em;margin:0}h2{font-size:1rem;margin:0}h3{font-size:.9375rem;margin:0}p{margin:4px 0 0}
+.muted{color:#737373}.head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;padding-bottom:24px;border-bottom:1px solid #e5e5e5}
+section{padding:24px 0 8px;border-bottom:1px solid #e5e5e5}.shead{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:2px 10px;border:1px solid #e5e5e5;border-radius:999px;font-size:.8125rem;font-weight:500;color:#404040;white-space:nowrap}
+.badge::before{content:"";width:6px;height:6px;border-radius:50%;background:#a3a3a3;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.high::before{background:#dc2626}.medium::before{background:#d97706}.low::before,.info::before{background:#16a34a}
+.finding{border:1px solid #e5e5e5;border-radius:8px;padding:14px 16px;margin:12px 0;break-inside:avoid}
+.fhead{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.finding p,.finding li{font-size:.875rem;color:#404040}
+.label{font-size:.75rem;text-transform:uppercase;letter-spacing:.04em;color:#737373;margin-top:12px}ol{margin:6px 0 0;padding-left:18px}
+footer{margin-top:24px;font-size:.75rem;color:#737373}
 `;
 
 export function reportToHtml(report) {
@@ -91,14 +92,14 @@ export function reportToHtml(report) {
   <div class="fhead"><h3>${escapeHtml(f.title)}</h3><span class="badge ${f.severity}">${SEVERITIES[f.severity]}</span></div>
   ${f.data?.photo ? `<p class="muted">Foto: ${escapeHtml(f.data.photo)}</p>` : ""}
   ${f.detail ? `<p>${escapeHtml(f.detail)}</p>` : ""}
-  ${f.remediation.length ? `<p><strong>Qué hacer</strong></p><ol>${f.remediation.map((s) => `<li>${escapeHtml(s)}</li>`).join("")}</ol>` : ""}
+  ${f.remediation.length ? `<p class="label">Qué hacer</p><ol>${f.remediation.map((s) => `<li>${escapeHtml(s)}</li>`).join("")}</ol>` : ""}
 </div>`,
       )
       .join("\n");
   const categories = report.categories
     .map(
       (c) => `<section>
-  <h2>${escapeHtml(c.label)}</h2>${badge(c.level, "Riesgo")}
+  <div class="shead"><h2>${escapeHtml(c.label)}</h2>${badge(c.level, "Riesgo")}</div>
   <p>${escapeHtml(c.summary)}</p>
   ${findings(c)}
 </section>`,

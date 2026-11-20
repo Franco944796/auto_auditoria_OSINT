@@ -39,7 +39,13 @@ dev = [
 include = ["app*"]
 
 [tool.setuptools.package-data]
-app = ["web/templates/*.html", "web/static/*.svg", "web/static/css/*", "web/static/js/*"]
+app = [
+    "web/templates/*.html",
+    "web/static/*.svg",
+    "web/static/css/*",
+    "web/static/js/*",
+    "web/static/fonts/*",
+]
 
 [tool.ruff]
 line-length = 100

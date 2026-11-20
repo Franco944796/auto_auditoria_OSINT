@@ -2,53 +2,85 @@
 {% block scripts %}<script type="module" src="/static/js/inicio.js"></script>{% endblock %}
 {% block content %}
 <section class="hero">
-  <p class="eyebrow">Privacidad y defensa personal</p>
+  <p class="eyebrow">Autoauditoría de exposición digital</p>
   <h1>¿Qué sabe internet de vos?</h1>
   <p class="lead">
     Revisá si tu email aparece en filtraciones, si tus contraseñas están comprometidas y qué
     revelan tus fotos. Recibí un plan concreto para reducir tu exposición.
   </p>
-  <ul class="promises">
-    <li><strong>Solo tus datos.</strong> Primero verificás que el email es tuyo; no se puede buscar a otras personas.</li>
-    <li><strong>Nada se guarda.</strong> Los resultados se generan, se muestran y se descartan.</li>
-    <li><strong>Tus contraseñas no salen de tu navegador.</strong> Se comprueban con k-anonimidad.</li>
-  </ul>
-</section>
 
-<section class="card auth-card" aria-labelledby="auth-title">
-  <h2 id="auth-title">Empezá verificando tu email</h2>
-  <p id="session-hint" class="notice notice--info" hidden>
-    Ya tenés una sesión abierta. <a href="/panel">Ir a mi panel</a>
-  </p>
-  <form id="email-form" class="stack" novalidate>
-    <label for="email">Tu email</label>
-    <input id="email" name="email" type="email" autocomplete="email" required placeholder="nombre@ejemplo.com">
-    <button type="submit" class="button">Enviarme el código</button>
-  </form>
-  <form id="code-form" class="stack" novalidate hidden>
-    <p>Te mandamos un código de 6 dígitos y un enlace a <strong id="sent-to"></strong>. Vencen en 15 minutos.</p>
-    <label for="code">Código de verificación</label>
-    <input id="code" name="code" inputmode="numeric" autocomplete="one-time-code" pattern="\d{6}" maxlength="6" required placeholder="123456">
-    <button type="submit" class="button">Verificar</button>
-  </form>
-  <p id="message" class="notice" role="status" hidden></p>
-</section>
-
-<section class="how" aria-labelledby="how-title">
-  <h2 id="how-title">Qué revisamos</h2>
-  <div class="grid-3">
-    <article class="feature">
-      <h3>Filtraciones de datos</h3>
-      <p>Consultamos {{ breach.label }} para ver en qué brechas aparece tu email y qué datos se expusieron.</p>
-    </article>
-    <article class="feature">
-      <h3>Contraseñas comprometidas</h3>
-      <p>Tu navegador calcula un hash y envía solo sus primeros 5 caracteres. La contraseña nunca llega a nadie.</p>
-    </article>
-    <article class="feature">
-      <h3>Metadatos de tus fotos</h3>
-      <p>Detectamos ubicación GPS, dispositivo y fechas, y te damos una copia limpia sin perder calidad.</p>
-    </article>
+  <div class="auth">
+    <h2 class="visually-hidden">Verificá tu email</h2>
+    <p id="session-hint" class="notice" hidden>
+      Ya tenés una sesión abierta. <a href="/panel">Ir a mi panel</a>
+    </p>
+    <form id="email-form" class="field-row" novalidate>
+      <label class="visually-hidden" for="email">Tu email</label>
+      <input id="email" name="email" type="email" autocomplete="email" required placeholder="tu@email.com">
+      <button type="submit" class="button">Enviarme el código</button>
+    </form>
+    <form id="code-form" class="stack" novalidate hidden>
+      <p class="muted">
+        Te mandamos un código de 6 dígitos y un enlace a <strong id="sent-to"></strong>.
+        Vencen en 15 minutos.
+      </p>
+      <div class="field-row">
+        <label class="visually-hidden" for="code">Código de verificación</label>
+        <input id="code" name="code" inputmode="numeric" autocomplete="one-time-code" pattern="\d{6}" maxlength="6" required placeholder="000000">
+        <button type="submit" class="button">Verificar</button>
+      </div>
+    </form>
+    <p id="message" class="notice" role="status" hidden></p>
+    <p class="fineprint">Solo podés analizar un email que demuestres que es tuyo.</p>
   </div>
+</section>
+
+<section class="principles" aria-label="Principios">
+  <div>
+    <h3>Solo tus datos</h3>
+    <p>Primero verificás que el email es tuyo. No se puede buscar a otras personas.</p>
+  </div>
+  <div>
+    <h3>Nada se guarda</h3>
+    <p>Los resultados se generan, se muestran y se descartan.</p>
+  </div>
+  <div>
+    <h3>Contraseñas privadas</h3>
+    <p>Se comprueban en tu navegador con k-anonimidad y nunca llegan al servidor.</p>
+  </div>
+</section>
+
+<section class="checks" aria-labelledby="checks-title">
+  <h2 id="checks-title" class="section-label">Qué revisamos</h2>
+  <ol class="check-list">
+    <li>
+      <span class="check-list__num">01</span>
+      <div>
+        <h3>Filtraciones de datos</h3>
+        <p>Consultamos {{ breach.label }} para ver en qué brechas aparece tu email y qué datos se expusieron.</p>
+      </div>
+    </li>
+    <li>
+      <span class="check-list__num">02</span>
+      <div>
+        <h3>Contraseñas comprometidas</h3>
+        <p>Tu navegador calcula un hash y envía solo sus primeros 5 caracteres. La contraseña nunca llega a nadie.</p>
+      </div>
+    </li>
+    <li>
+      <span class="check-list__num">03</span>
+      <div>
+        <h3>Metadatos de tus fotos</h3>
+        <p>Detectamos ubicación GPS, dispositivo y fechas, y te damos una copia limpia sin perder calidad.</p>
+      </div>
+    </li>
+    <li>
+      <span class="check-list__num">04</span>
+      <div>
+        <h3>Informe con plan de acción</h3>
+        <p>Nivel de riesgo por categoría y pasos concretos para cada hallazgo. Lo descargás o lo imprimís.</p>
+      </div>
+    </li>
+  </ol>
 </section>
 {% endblock %}

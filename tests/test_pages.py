@@ -68,3 +68,12 @@ def test_plantillas_existen():
         "privacidad.html",
     }
     assert Path(STATIC_DIR / "css" / "app.css").exists()
+
+
+def test_fuente_inter_se_sirve_localmente_con_su_licencia(client):
+    response = client.get("/static/fonts/inter-latin.woff2")
+    assert response.status_code == 200
+    assert response.content[:4] == b"wOF2"
+    assert (STATIC_DIR / "fonts" / "OFL.txt").exists()
+    css = (STATIC_DIR / "css" / "app.css").read_text()
+    assert "fonts.googleapis" not in css and "/static/fonts/inter-latin.woff2" in css
