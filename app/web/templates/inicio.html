@@ -9,8 +9,12 @@
     revelan tus fotos. Recibí un plan concreto para reducir tu exposición.
   </p>
 
-  <div class="auth">
-    <h2 class="visually-hidden">Verificá tu email</h2>
+  <div class="auth" aria-labelledby="auth-title">
+    <h2 id="auth-title" class="auth__title">Verificá que el email es tuyo</h2>
+    <p class="auth__hint">
+      Te mandamos un código de 6 dígitos y un enlace. Con cualquiera de los dos confirmás que el
+      email es tuyo y entrás a tu panel.
+    </p>
     <p id="session-hint" class="notice" hidden>
       Ya tenés una sesión abierta. <a href="/panel">Ir a mi panel</a>
     </p>
@@ -31,7 +35,7 @@
       </div>
     </form>
     <p id="message" class="notice" role="status" hidden></p>
-    <p class="fineprint">Solo podés analizar un email que demuestres que es tuyo.</p>
+    <p class="fineprint">Sin esta verificación no se puede analizar ningún email.</p>
   </div>
 </section>
 

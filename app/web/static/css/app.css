@@ -387,7 +387,21 @@ a:focus-visible,
 
 .auth {
   margin-top: 32px;
-  max-width: 30rem;
+  max-width: 32rem;
+  padding: 20px;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.auth__title {
+  font-size: 0.9375rem;
+}
+
+.auth__hint {
+  margin: 4px 0 16px;
+  font-size: 0.875rem;
+  color: var(--muted);
 }
 
 .auth .stack {
